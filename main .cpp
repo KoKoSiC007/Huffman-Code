@@ -1,3 +1,5 @@
+//ДОБАВЬИТЬ КОЛИЧЕСТВО НУЛЕЙ КОТОРОЕ ТЫ ДОБАВИЛ!!!!!!!!!
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -19,17 +21,12 @@ public:
         qty = l->qty + r->qty;
     }
 };
+
 struct sorting{
     bool operator()(Node *l, Node *r){
         return l->qty < r->qty;
     }
 };
-
-//struct Sorting{
-//    bool operator()(Node l,Node r) const{
-//        return l.qty < r.qty;
-//    }
-//};
 
 // reading from files
 const std::vector<char> readFile(const std::string fileName) {
@@ -41,6 +38,14 @@ const std::vector<char> readFile(const std::string fileName) {
 	}
 	inputFile.close();
 	return inputChars;
+}
+// writing from files
+void wriringOnFile(const std::vector<char>encodedText, const std::string fileName){
+    std::ofstream outputFile = std::ofstream(fileName);
+    for (int i = 0; i < encodedText.size();i++){
+        outputFile << encodedText[i];
+    }
+    outputFile.close();
 }
 
 //encoding Func
@@ -55,7 +60,6 @@ const std::vector<char> encodeData(const std::vector<char> decodedData) {
 		encodedData.push_back(encodedChar);
 		lastChar = currentChar;
 	}
-	
 	return encodedData;
 }
 
@@ -86,7 +90,7 @@ const std::map<char,int> counter(const std::string& s)
 
  std::list<Node *> creatyNodeList(const std::map<char,int> charsInString){
 
-	 std::list<Node *> nodeList = std::list<Node *>();
+    std::list<Node *> nodeList = std::list<Node *>();
     std::map<char,int>::iterator iter;
     for(auto iter=charsInString.begin(); iter!=charsInString.end(); iter++) {
         Node *branch = new Node();
@@ -117,12 +121,14 @@ Node *creatingTree( std::list<Node *> nodeList){
 
 std::vector<bool> code;
 std::map<char,std::vector<bool>> table;
-///*
-// m 1010
-// g 111
-// t 0
-// */
+/* table view
+m 1010
+g 11100
+t 0
+/n 11101
+*/
 void createTable(Node *root){
+    
     if (root->left != NULL){
         code.push_back(0);
         createTable(root->left);
@@ -133,31 +139,70 @@ void createTable(Node *root){
     }
     if (root->character){
         table[root->character] = code;
+        /*
         std::cout << "Character is " << root->character << ' ';
         for (int i = 0 ; i<code.size(); i++) {
             std::cout << code[i];
         }
         std::cout<< std::endl;
-//        std::cout<<" Character is " <<root->character <<" charater code: "<< code <<std::endl;
+        */
     }
     code.pop_back();
 }
 
-void  (const std::string inputString){
+std::string printedTable(const std::string inputString){
 
+    std::string bitString;
     for (int i = 0 ; i<inputString.length(); i++) {
         std::vector<bool> tbl = table[inputString[i]];
 
         for (int j = 0; j<tbl.size(); j++) {
-            std::cout<<tbl[j];
+            if (tbl[j]==0) {
+                bitString += "0";
+            }else{
+                bitString += "1";
+            }
         }
     }
+    return bitString;
+}
+
+const std::vector<char> bitWriting( std::string bitString){
+    std::vector<char> encodedText;
+    char zero = 0;
+    encodedText.push_back(zero);
+    int count = 0;
+    int indexInVectorChars = 0;
+    
+    if(bitString.size() % 8 != 0 ){
+        for (int i = 0; bitString.size()%8 != 0 ; i++) {
+            bitString = "0" + bitString;
+        }
+    }
+    for (int i = 0 ; i<bitString.size(); i++) {
+        if (count == 8){
+            encodedText.push_back(0);
+            count = 0;
+            indexInVectorChars++;
+        }
+        if (bitString[i] == '0'){
+            encodedText[indexInVectorChars] <<=1 ;
+            count++;
+        }else{
+            encodedText[indexInVectorChars] += true;
+            count++;
+        }
+    }
+    
+    return encodedText;
 }
 
 int main(int argc, const char * argv[]) {
 	
-    const std::string path = "/Users/kokos/Documents/Prog/SuperDifficultProgram/InputText.txt";
-	const std::string inputFileName = path;
+    const std::string inputPath = "/Users/kokos/Documents/Prog/SuperDifficultProgram/InputText.txt";
+    const std::string outputPath ="/Users/kokos/Documents/Prog/SuperDifficultProgram/OutputText.txt";
+	const std::string inputFileName = inputPath;
+    const std::string outputFileName = outputPath;
 	const std::vector<char> inputChars = readFile(inputFileName);
     std::string inputString = std::string(inputChars.begin(), inputChars.end());
     std::cout << inputString << std::endl;
@@ -170,16 +215,11 @@ int main(int argc, const char * argv[]) {
     std::cout << std::endl;
     Node *test = creatingTree(creatyNodeList(counter(inputString)));
     createTable(test);
-    printedTable(inputString);
-//    std::cout << test->character <<' '<< test->qty << ' ' << test->left << ' ' << test->right<<std::endl;
-//    std::list<Node>::iterator iter;
-//    for (iter = test.begin();iter != test.end();iter++) {
-//        std::cout << iter->character << iter->qty<<' '<< iter->left<<' '<< iter->right<<"\n";
-//    }
-//    Node root = creatingTree(creatyNodeList(counter(encodedString)));
-//    createTable(root);
-//    printedTable(inputString);
+    std::string bitString = printedTable(inputString);
+    std::vector<char> testing = bitWriting(bitString);
+    wriringOnFile(testing,outputFileName);
+//    std::string bitStrint = printedTable(inputString);
+//    std::cout <<"This string of bits: "<< bitStrint;
     
 	return 0;
 }
-
