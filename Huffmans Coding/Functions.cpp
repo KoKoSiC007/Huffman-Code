@@ -180,15 +180,19 @@ std::bitset<8> fliped(std::bitset<8> readibleBits){
 }
 
 const int addingMissingZeros (const std::string bitString){
-    return bitString.size()%8;
+    return  8 - bitString.size()%8;
 }
 //create encoded Text
 const std::vector<char> bitWriting(std::string bitString){
     std::vector<char> encodedText;
     std::bitset<8> readibleBits;
+    int addZeros = 8 -  bitString.size()%8;
     std::cout << bitString<<std::endl;
-    bitString += '0' * (bitString.size()%8);
-    std::cout << bitString<<std::endl;
+
+    for (; addZeros != 0 ; addZeros--) {
+        bitString += '0';
+    }
+    
     int count = 0;
     for(int i = 0; i < bitString.size(); i++){
         if (bitString[i] =='1'){
@@ -203,7 +207,9 @@ const std::vector<char> bitWriting(std::string bitString){
             readibleBits.reset();
         }
     }
-//    char text = encodedText[encodedText.size()-1];
+    std::cout << std::endl;
 
+    char text = encodedText[encodedText.size()];
+    std::cout <<' '<< text << std::endl;
     return encodedText;
 }
