@@ -51,6 +51,9 @@ Node *creatingTree( std::list<Node *> nodeList);
 void createTable(Node *root);
 std::string createBitString(const std::string inputString);
 const std::vector<char> bitWriting( std::string bitString);
-void writingTableOnFile (const std::string fileName,int addZeros);
+void writingTableOnFile (const std::string fileName,int addZeros,const std::map<char,int> thesaurus);
 const int addingMissingZeros (const std::string bitString);
+const std::string writeEncodeText (const std::string inputEncodedString,int uslessZero);
+const int readAddZeros(const std::string);
+std::map<char,int> readTableOnFile(const std::string fileName);
 #endif /* Functions_hpp */

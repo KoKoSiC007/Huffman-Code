@@ -15,6 +15,7 @@
 #include <set>
 #include <list>
 #include <bitset>
+
 // reading from files
 const std::string readFile(const std::string fileName) {
     std::ifstream inputFile = std::ifstream(fileName);
@@ -36,22 +37,39 @@ void wriringOnFile(const std::vector<char>encodedText, const std::string fileNam
     outputFile.close();
 }
 
-void writingTableOnFile (const std::string fileName,int addZeros){
+const int readAddZeros(const std::string fileName){
+    int uslessZeros;
+    
+    std::ifstream inputFile = std::ifstream (fileName);
+    uslessZeros =  inputFile.get() - 48;
+    inputFile.close();
+    return uslessZeros;
+}
+
+
+void writingTableOnFile (const std::string fileName,int addZeros,const std::map<char,int> thesaurus){
     std::ofstream TableFile = std::ofstream(fileName);
     
-    TableFile<<addZeros<<std::endl;
-    std::map<char,std::vector<bool>>::iterator iter;
-    for (iter = table.begin(); iter != table.end();iter++){
-        TableFile << iter->first<<' ';
-        for (int i = 0 ; i < iter->second.size(); i++) {
-            if (iter->second[i] == true){
-                TableFile << "1";
-            }else{
-                TableFile << "0";
-            }
-        }
-        TableFile << std::endl;
+    TableFile<<addZeros;
+    
+    std::map<char,int>::iterator iter;
+    for (auto iter =thesaurus.begin(); iter != thesaurus.end();iter++){
+        TableFile << iter->first << ' '<< iter->second << std::endl;
     }
+    /* uncommended if you want see table in file*/
+    
+//    std::map<char,std::vector<bool>>::iterator iter;
+//    for (iter = table.begin(); iter != table.end();iter++){
+//        TableFile << iter->first<<' ';
+//        for (int i = 0 ; i < iter->second.size(); i++) {
+//            if (iter->second[i] == true){
+//                TableFile << "1";
+//            }else{
+//                TableFile << "0";
+//            }
+//        }
+//        TableFile << std::endl;
+//    }
 }
 
 //encoding Func
@@ -141,13 +159,13 @@ void createTable(Node *root){
     }
     if (root->character){
         table[root->character] = code;
-        /*
+        
          std::cout << "Character is " << root->character << ' ';
          for (int i = 0 ; i<code.size(); i++) {
          std::cout << code[i];
          }
          std::cout<< std::endl;
-         */
+         
     }
     code.pop_back();
 }
@@ -187,8 +205,7 @@ const std::vector<char> bitWriting(std::string bitString){
     std::vector<char> encodedText;
     std::bitset<8> readibleBits;
     int addZeros = 8 -  bitString.size()%8;
-    std::cout << bitString<<std::endl;
-
+    
     for (; addZeros != 0 ; addZeros--) {
         bitString += '0';
     }
@@ -207,9 +224,46 @@ const std::vector<char> bitWriting(std::string bitString){
             readibleBits.reset();
         }
     }
-    std::cout << std::endl;
-
-    char text = encodedText[encodedText.size()];
-    std::cout <<' '<< text << std::endl;
     return encodedText;
+}
+
+const std::string writeEncodeText (const std::string inputEncodedString,int uslessZero){
+    std::string encodedBitString;
+    std::bitset<8> readableChar;
+    for (int i = 0; i<inputEncodedString.size(); i++){
+        readableChar = (inputEncodedString[i]);
+        encodedBitString += readableChar.to_string();
+        readableChar.reset();
+    }
+    //    readableChar = (inputEncodedString[inputEncodedString.size()]);
+    for (; uslessZero != 0; uslessZero--) {
+        encodedBitString.pop_back();
+    }
+    
+    return encodedBitString;
+}
+
+std::map<char,int> readTableOnFile(const std::string fileName){
+    std::map<char,int> readedTable;
+    
+    std::ifstream inputFile = std::ifstream (fileName);
+    
+    char index = '\0';
+    char character;
+    std::string integer;
+    inputFile.get();
+    inputFile.get();
+    
+    while (!inputFile.eof()) {
+        character = inputFile.get();
+        inputFile.get();
+        index = inputFile.get();
+        while (index != '\n' && !inputFile.eof()) {
+            integer +=index;
+            index = inputFile.get();
+        }
+        readedTable[character] = atoi(integer.c_str());
+        integer.clear();
+    }
+    return readedTable;
 }

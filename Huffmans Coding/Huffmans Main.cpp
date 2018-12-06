@@ -18,37 +18,43 @@
 #include <list>
 #include <bitset>
 
-
-const std::string writeEncodeText (const std::string inputEncodedString,int uslessZero = 6){
-    std::string encodedBitString;
-    std::bitset<8> readableChar;
-    for (int i = 0; i<inputEncodedString.size(); i++){
-        readableChar = (inputEncodedString[i]);
-        encodedBitString += readableChar.to_string();
-        readableChar.reset();
+char show(Node *Tree,std::string code)
+{
+    if (Tree->left == NULL && Tree->right == NULL){
+        return Tree->character;
     }
-    readableChar = (inputEncodedString[inputEncodedString.size()]);
+    if (code.front()=='0'){
+//        std::cout<<code<<std::endl;
+        return show(Tree->left, code.substr(1));
+    }
+    if (code.front()=='1'){
+//        std::cout<<code<<std::endl;
+        return show(Tree->right, code.substr(1));
+    }
+    return 0;
+}
+
+const std::string decodingText(const std::string encodedBitString,Node *root){
+    std::string decodedString;
+    std::string buff;
+    int index = 0;
+    while(index != encodedBitString.size()){
+        if (show(root, buff)){
+            decodedString += show(root, buff);
+//            std::cout << decodedString<<std::endl;
+            buff.clear();
+        }else{
+            std::cout << encodedBitString[index]<<std::endl;
+            buff+=encodedBitString[index];
+        }
+    }
     
-    return encodedBitString;
+    return decodedString;
 }
 
 int main(int argc, const char * argv[]) {
-//    char x = 65;
-//    std::cout << x;
-//    std::bitset<8> text ('0');
-//    int bitstring =  text.to_ulong();
-//    char c = bitstring;
-//    std::cout << "The set of bits in bitset<8> is: ( "<< text<< " )"<< std::endl;
-//    std::cout << bitstring << std::endl;
-//    std::cout << c << std::endl;
-    std::string txt = "11100010000101000111000111101101100111000110010100101100100001111100010111101110110111011010110111011000101001000011111100111001110111011111010010110010010111001111110110110111011011000111001000010101101010100001111101111010100111101111000011010001111110000010000111110111101010011110110100100100110000111101111000101010011001111110011100110101101011110001101111001001100011110111110111001010001011001010010100001001110100110110101111111011111110000111101100001111010011000000111111010000101100111110010111000111101111100110101010011010001111010100010100101011000000110110001011110100111101010101110010010011000011110111100010101000100111000001011110101101100010110000101010000111110111101010011110101001011111011110101000001000100111001101011010110000011011000110101010011000000010101101101100110110111100010100100110001010001101001010000000111101111111001011111010010101111001110010110010010111001111110110110111011010011001110010101011110111001110010101101010000111110111101010011110111100001101000111111000001000011111011110101001111011010000010101001100000011110010011001111100101111011111010010110000000010010010100101010110000000111101100100001010011001110010101011110111001110010101101001010000100111010011011010111111101111111000011110111011011001000100101100011000100111001001100111110010111010010101100000010110100010011111100011011110010011000111001101000110111111010100100100011110111111000111010100001111101111010100111101010010101100000010110101111001110010111110111100000101001010101011110000010101111100101011001111000010111111000001010111110011110010001101110111101001111011000011110100110000001111110100001011000101100000001111010110101010011110111100010111010101101001001001100000101101110110110001111011101001011011111011101000001010001110001111110010011110101011111001011000111001000010110010010111001111110110110111011111110000111001101101000110001100111001010100001011101101011100111001100110000010010101000001000100111001101011001001010110000011111100111001110110101110011110010010100100100110000111101111000101011001100011110001010111101111001011000011010010110111010010111001100010100001010010010011101100101000001010100010011111001011110100100011000101011011010111111101111111000011100110111100010000101000111000111101101100111000110010100101100100001111100010111101110110111011010110111011000101001000011111100111001110111011111010010110010010111001111110110110111011011000111001000010101101010100001111101111010100111101111000011010001111110000010000111110111101010011110110100100100110000111101111000101010011001111110011100110101101011110001101111001001100011110111110111001010001011001010010100001001110100110110101111111011111110000111101100001111010011000000111111010000101100111110010111000111101111100110101010011010001111010100010100101011000000110110001011110100111101010101110010010011000011110111100010101000100111000001011110101101100010110000101010000111110111101010011110101001011111011110101000001000100111001101011010110000011011000110101010011000000010101101101100110110000000110110000";
-    std::cout << txt.size()<<std::endl;
-    
-//
-//    char symb = '\x01A';
-//    int tr =(int)(symb);
-//    printf("%c cahracter",tr);
-//    printf("\n");
+    std::string str = "0";
+    std::cout << str.substr(1).empty();
     //    delta codeing
     //    const std::vector<char> encodedData = encodeData(inputChars);
     //    std::string encodedString = std::string(encodedData.begin(), encodedData.end());
@@ -56,7 +62,6 @@ int main(int argc, const char * argv[]) {
     //    const std::vector<char> decodedData = decodeData(encodedData);
     //    std::string decodedString = std::string(decodedData.begin(), decodedData.end());
     //   std::cout << decodedString << std::endl;
-    
     const std::string inputPath = "/Users/kokos/Desktop/InputText.txt";
     const std::string outputPath ="/Users/kokos/Desktop/OutputText.txt";
     const std::string tablePath = "/Users/kokos/Desktop/Table.txt";
@@ -65,23 +70,25 @@ int main(int argc, const char * argv[]) {
     const std::string outputFileName = outputPath;
     const std::string tableFileName = tablePath;
     const std::string inputEncodedFileName = inputEncoded;
-    
+    /* encoding text part*/
     const std::string inputString = readFile(inputFileName);
     std::cout << inputString;
-    
     Node *test = creatingTree(creatyNodeList(counter(inputString)));
     createTable(test);
     std::string bitString = createBitString(inputString);
     std::cout << bitString << std::endl;
     std::vector<char> testing = bitWriting(bitString);
     wriringOnFile(testing,outputFileName);
-    writingTableOnFile(tableFileName,addingMissingZeros(bitString));
-    
+    writingTableOnFile(tableFileName,addingMissingZeros(bitString),counter(inputString));
+    std::cout<<std::endl;
+    /* decoding text part*/
     const std::string inputEncodedString = readFile(inputEncodedFileName);
-//    std::cout << inputEncodedString<< std::endl;
-
-    const std::string encodedBitString = writeEncodeText(inputEncodedString);
-    std::cout << encodedBitString<< std::endl;
+    int localtest = readAddZeros(tableFileName);
+    const std::string encodedBitString = writeEncodeText(inputEncodedString, localtest);
+    Node *decoding = creatingTree(creatyNodeList(readTableOnFile(tableFileName)));
+    std::string decodedTxt = decodingText(encodedBitString, decoding);
+    std::cout << decodedTxt<< std::endl;
+    
     //    std::string bitStrint = printedTable(inputString);
     //    std::cout <<"This string of bits: "<< bitStrint;
     
