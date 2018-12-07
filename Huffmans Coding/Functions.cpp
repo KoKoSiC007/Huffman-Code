@@ -59,11 +59,11 @@ const int readAddZeros(const std::string fileName){
 void writingTableOnFile (const std::string fileName,int addZeros,const std::map<char,int> thesaurus){
     std::ofstream TableFile = std::ofstream(fileName);
     
-    TableFile<<addZeros;
+    TableFile<<addZeros<<std::endl;
     
     std::map<char,int>::iterator iter;
     for (auto iter =thesaurus.begin(); iter != thesaurus.end();iter++){
-        TableFile << iter->first << ' '<< iter->second << std::endl;
+        TableFile << iter->first << iter->second << std::endl;
     }
     /* uncommended if you want see table in file*/
     
@@ -169,12 +169,12 @@ void createTable(Node *root){
     if (root->character){
         table[root->character] = code;
         
-//         std::cout << "Character is " << root->character << ' ';
-//         for (int i = 0 ; i<code.size(); i++) {
-//         std::cout << code[i];
-//         }
-//         std::cout<< std::endl;
-         
+         std::cout << "Character is " << root->character << ' ';
+         for (int i = 0 ; i<code.size(); i++) {
+         std::cout << code[i];
+         }
+         std::cout<< std::endl;
+        
     }
     code.pop_back();
 }
@@ -263,7 +263,6 @@ std::map<char,int> readTableOnFile(const std::string fileName){
     inputFile.get();
     inputFile.get();
     character = inputFile.get();
-    character = '\n';
     index = inputFile.get();
     while (!inputFile.eof()) {
         while (index != '\n' && !inputFile.eof()) {
@@ -273,7 +272,6 @@ std::map<char,int> readTableOnFile(const std::string fileName){
         readedTable[character] = stoi(integer);
         integer.clear();
         character = inputFile.get();
-        inputFile.get();
         index = inputFile.get();
     }
 //    std::map<char,int>::iterator iter1;
