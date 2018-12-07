@@ -56,4 +56,5 @@ const int addingMissingZeros (const std::string bitString);
 const std::string writeEncodeText (const std::string inputEncodedString,int uslessZero);
 const int readAddZeros(const std::string);
 std::map<char,int> readTableOnFile(const std::string fileName);
+void wriringOnFile(const std::string encodedText, const std::string fileName);
 #endif /* Functions_hpp */

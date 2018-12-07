@@ -37,6 +37,15 @@ void wriringOnFile(const std::vector<char>encodedText, const std::string fileNam
     outputFile.close();
 }
 
+void wriringOnFile(const std::string encodedText, const std::string fileName){
+    std::ofstream outputFile = std::ofstream(fileName);
+    for (int i = 0; i < encodedText.size();i++){
+        outputFile << encodedText[i];
+    }
+    outputFile.close();
+}
+
+
 const int readAddZeros(const std::string fileName){
     int uslessZeros;
     
@@ -160,11 +169,11 @@ void createTable(Node *root){
     if (root->character){
         table[root->character] = code;
         
-         std::cout << "Character is " << root->character << ' ';
-         for (int i = 0 ; i<code.size(); i++) {
-         std::cout << code[i];
-         }
-         std::cout<< std::endl;
+//         std::cout << "Character is " << root->character << ' ';
+//         for (int i = 0 ; i<code.size(); i++) {
+//         std::cout << code[i];
+//         }
+//         std::cout<< std::endl;
          
     }
     code.pop_back();
@@ -253,17 +262,25 @@ std::map<char,int> readTableOnFile(const std::string fileName){
     std::string integer;
     inputFile.get();
     inputFile.get();
-    
+    character = inputFile.get();
+    character = '\n';
+    index = inputFile.get();
     while (!inputFile.eof()) {
-        character = inputFile.get();
-        inputFile.get();
-        index = inputFile.get();
         while (index != '\n' && !inputFile.eof()) {
             integer +=index;
             index = inputFile.get();
         }
-        readedTable[character] = atoi(integer.c_str());
+        readedTable[character] = stoi(integer);
         integer.clear();
+        character = inputFile.get();
+        inputFile.get();
+        index = inputFile.get();
     }
+//    std::map<char,int>::iterator iter1;
+//    for (iter1 = readedTable.begin(); iter1 != readedTable.end(); iter1++) {
+//        std::cout << iter1->first<<' '<<iter1->second;
+//        std::cout<<std::endl;
+//    }
+    
     return readedTable;
 }
