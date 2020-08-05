@@ -244,7 +244,7 @@ const std::string writeEncodeText (const std::string inputEncodedString,int usle
         encodedBitString += readableChar.to_string();
         readableChar.reset();
     }
-    //    readableChar = (inputEncodedString[inputEncodedString.size()]);
+
     for (; uslessZero != 0; uslessZero--) {
         encodedBitString.pop_back();
     }
@@ -274,11 +274,6 @@ std::map<char,int> readTableOnFile(const std::string fileName){
         character = inputFile.get();
         index = inputFile.get();
     }
-//    std::map<char,int>::iterator iter1;
-//    for (iter1 = readedTable.begin(); iter1 != readedTable.end(); iter1++) {
-//        std::cout << iter1->first<<' '<<iter1->second;
-//        std::cout<<std::endl;
-//    }
     
     return readedTable;
 }
